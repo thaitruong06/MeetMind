@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1036642798486",
+    "project_id": "login-registration-bcc1f",
+    "storage_bucket": "login-registration-bcc1f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1036642798486:android:b18b5acd42f3ddc572abb7",
+        "android_client_info": {
+          "package_name": "com.team7.meetmind"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsYhrVmui-sH05CdOcpbG6QuVIiiWCOIA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
