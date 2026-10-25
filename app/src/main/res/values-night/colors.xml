@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="mm_background">#15141C</color>
+    <color name="mm_surface">#1E1C28</color>
+    <color name="mm_surface_elevated">#262333</color>
+    <color name="mm_outline">#8D879B</color>
+    <color name="mm_primary">#F2A33C</color>
+    <color name="mm_secondary">#F2683C</color>
+    <color name="mm_tertiary">#B6A2F5</color>
+    <color name="mm_on_accent">#231405</color>
+    <color name="mm_text_primary">#F4F1EC</color>
+    <color name="mm_text_muted">#BAB4C6</color>
+    <color name="mm_text_faint">#B0AABB</color>
+    <color name="mm_success">#4FD1A5</color>
+    <color name="mm_on_success">#003828</color>
+    <color name="mm_error">#FFB4AB</color>
+    <color name="mm_on_error">#690005</color>
+    <color name="mm_error_container">#93000A</color>
+    <color name="mm_on_error_container">#FFDAD6</color>
+    <color name="mm_disabled_container">#403B4C</color>
+    <color name="mm_on_disabled">#DDD7E5</color>
+    <color name="mm_inverse_surface">#ECE7F0</color>
+    <color name="mm_inverse_on_surface">#211D29</color>
+    <color name="mm_inverse_primary">#884600</color>
+    <color name="mm_scrim">#000000</color>
+</resources>

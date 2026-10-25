@@ -7,4 +7,28 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <!-- Semantic light palette, shared by the window theme and Compose. -->
+    <color name="mm_background">#FAF7FC</color>
+    <color name="mm_surface">#FFFFFF</color>
+    <color name="mm_surface_elevated">#ECE7F0</color>
+    <color name="mm_outline">#807989</color>
+    <color name="mm_primary">#884600</color>
+    <color name="mm_secondary">#A93418</color>
+    <color name="mm_tertiary">#6550A3</color>
+    <color name="mm_on_accent">#FFFFFF</color>
+    <color name="mm_text_primary">#211D29</color>
+    <color name="mm_text_muted">#5F5868</color>
+    <color name="mm_text_faint">#696473</color>
+    <color name="mm_success">#006C4C</color>
+    <color name="mm_on_success">#FFFFFF</color>
+    <color name="mm_error">#BA1A1A</color>
+    <color name="mm_on_error">#FFFFFF</color>
+    <color name="mm_error_container">#FFDAD6</color>
+    <color name="mm_on_error_container">#410002</color>
+    <color name="mm_disabled_container">#E2DCE6</color>
+    <color name="mm_on_disabled">#625B6B</color>
+    <color name="mm_inverse_surface">#262333</color>
+    <color name="mm_inverse_on_surface">#F4F1EC</color>
+    <color name="mm_inverse_primary">#F2A33C</color>
+    <color name="mm_scrim">#000000</color>
 </resources>

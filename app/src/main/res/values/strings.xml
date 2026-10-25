@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">MeetMind</string>
+    <string name="appearance_title">Giao diện</string>
+    <string name="appearance_description">Chọn giao diện cho ứng dụng</string>
+    <string name="theme_system">Theo hệ thống</string>
+    <string name="theme_light">Sáng</string>
+    <string name="theme_dark">Tối</string>
 </resources>

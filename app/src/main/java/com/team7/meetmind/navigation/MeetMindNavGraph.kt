@@ -3,6 +3,7 @@ package com.team7.meetmind.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -21,13 +22,19 @@ import com.team7.meetmind.ui.meetingdetail.MeetingDetailScreen
 import com.team7.meetmind.ui.recording.RecordingScreen
 import com.team7.meetmind.ui.search.SearchScreen
 import com.team7.meetmind.ui.settings.SettingsScreen
+import com.team7.meetmind.ui.theme.ThemeMode
 
 @Composable
 fun MeetMindNavGraph(
+    themeMode: ThemeMode,
+    onThemeModeChange: (ThemeMode) -> Unit,
     navController: NavHostController = rememberNavController(),
     authViewModel: AuthViewModel = viewModel()
 ) {
-    val startDestination = if (authViewModel.currentUser.value != null) Routes.HOME else Routes.LOGIN
+    // Theme recomposition must not rebuild the navigation graph with a new start destination.
+    val startDestination = remember(authViewModel) {
+        if (authViewModel.currentUser.value != null) Routes.HOME else Routes.LOGIN
+    }
 
     NavHost(navController = navController, startDestination = startDestination) {
 
@@ -82,6 +89,8 @@ fun MeetMindNavGraph(
         composable(Routes.SETTINGS) {
             val user by authViewModel.currentUser.collectAsState()
             SettingsScreen(
+                themeMode = themeMode,
+                onThemeModeChange = onThemeModeChange,
                 userLabel = user?.displayName?.ifBlank { null } ?: user?.email ?: "Tài khoản",
                 onNavigate = { route -> navController.navigate(route) { launchSingleTop = true } },
                 onRecordClick = { navController.navigate(Routes.RECORDING) },

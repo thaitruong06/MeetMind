@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.MeetMind" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/mm_background</item>
+        <item name="android:colorBackground">@color/mm_background</item>
+        <item name="android:colorAccent">@color/mm_primary</item>
+        <item name="android:textColorPrimary">@color/mm_text_primary</item>
+        <item name="android:textColorSecondary">@color/mm_text_muted</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/mm_surface</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>

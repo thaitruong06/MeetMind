@@ -32,7 +32,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -121,7 +120,7 @@ private fun CircleActionButton(icon: ImageVector, label: String, isPrimary: Bool
                 .clickable(onClick = onClick),
             contentAlignment = Alignment.Center
         ) {
-            Icon(icon, contentDescription = label, tint = if (isPrimary) Color.White else TextPrimary)
+            Icon(icon, contentDescription = label, tint = if (isPrimary) MaterialTheme.colorScheme.onSecondary else TextPrimary)
         }
         Spacer(Modifier.height(8.dp))
         Text(label, color = TextMuted, style = MaterialTheme.typography.bodyMedium)

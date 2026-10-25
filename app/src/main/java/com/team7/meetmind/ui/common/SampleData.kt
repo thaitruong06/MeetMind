@@ -1,10 +1,10 @@
 package com.team7.meetmind.ui.common
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.graphics.Color
-import com.team7.meetmind.ui.theme.SignalAmber
-import com.team7.meetmind.ui.theme.SignalCoral
-import com.team7.meetmind.ui.theme.SignalViolet
-import com.team7.meetmind.ui.theme.StateSuccess
+import com.team7.meetmind.ui.theme.ThemeAccent
+import com.team7.meetmind.ui.theme.color
 import com.team7.meetmind.ui.theme.TextMuted
 
 /**
@@ -34,7 +34,10 @@ data class ActionItemUi(
     val done: Boolean
 )
 
-data class FolderUi(val name: String, val meetingCount: Int, val color: Color)
+data class FolderUi(val name: String, val meetingCount: Int, val accent: ThemeAccent) {
+    // Store a semantic accent, not a color captured when SampleData was initialized.
+    val color: Color @Composable @ReadOnlyComposable get() = accent.color()
+}
 
 data class CalendarEventUi(
     val id: String,
@@ -47,10 +50,10 @@ data class CalendarEventUi(
 object SampleData {
 
     val folders = listOf(
-        FolderUi("Dự án MeetMind", 6, SignalAmber),
-        FolderUi("Khách hàng", 3, SignalCoral),
-        FolderUi("Kỹ thuật", 4, SignalViolet),
-        FolderUi("Cá nhân", 1, StateSuccess)
+        FolderUi("Dự án MeetMind", 6, ThemeAccent.AMBER),
+        FolderUi("Khách hàng", 3, ThemeAccent.CORAL),
+        FolderUi("Kỹ thuật", 4, ThemeAccent.VIOLET),
+        FolderUi("Cá nhân", 1, ThemeAccent.SUCCESS)
     )
 
     val meetings = listOf(
@@ -122,5 +125,7 @@ object SampleData {
 
     fun meetingById(id: String): Meeting = meetings.firstOrNull { it.id == id } ?: meetings.first()
 
+    @Composable
+    @ReadOnlyComposable
     fun folderColor(name: String): Color = folders.firstOrNull { it.name == name }?.color ?: TextMuted
 }

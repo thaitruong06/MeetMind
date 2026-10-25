@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -50,6 +51,7 @@ import com.team7.meetmind.ui.theme.SignalAmber
 import com.team7.meetmind.ui.theme.SignalCoral
 import com.team7.meetmind.ui.theme.SignalViolet
 import com.team7.meetmind.ui.theme.StateSuccess
+import com.team7.meetmind.ui.theme.OnSuccess
 import com.team7.meetmind.ui.theme.TextFaint
 import com.team7.meetmind.ui.theme.TextMuted
 import com.team7.meetmind.ui.theme.TextPrimary
@@ -63,7 +65,7 @@ fun MeetingDetailScreen(meetingId: String, onBack: () -> Unit) {
     Scaffold(
         topBar = {
             Row(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp),
+                modifier = Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = 12.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = onBack) {
@@ -188,6 +190,7 @@ private fun TranscriptBubble(line: TranscriptLine) {
     }
 }
 
+@Composable
 private fun speakerColor(name: String): Color = when (name) {
     "Thái" -> SignalAmber
     "Phú" -> SignalViolet
@@ -224,7 +227,7 @@ private fun ActionItemRow(item: ActionItemUi) {
                 .border(1.5.dp, if (done) StateSuccess else TextFaint, CircleShape),
             contentAlignment = Alignment.Center
         ) {
-            if (done) Icon(Icons.Filled.Check, contentDescription = null, tint = Color.White, modifier = Modifier.size(14.dp))
+            if (done) Icon(Icons.Filled.Check, contentDescription = null, tint = OnSuccess, modifier = Modifier.size(14.dp))
         }
         Spacer(Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1f)) {

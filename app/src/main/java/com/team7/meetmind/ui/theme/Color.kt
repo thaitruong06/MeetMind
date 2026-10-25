@@ -1,22 +1,49 @@
 package com.team7.meetmind.ui.theme
 
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
-// Nền ấm, tối (không dùng đen thuần) — gợi cảm giác phòng họp buổi tối, tĩnh lặng để tập trung lắng nghe
-val InkBackground = Color(0xFF15141C)
-val InkSurface = Color(0xFF1E1C28)
-val InkSurfaceElevated = Color(0xFF262333)
-val InkOutline = Color(0xFF34303F)
+@Immutable
+internal data class AdditionalColors(
+    val textFaint: Color,
+    val success: Color,
+    val onSuccess: Color,
+    val disabledContainer: Color,
+    val onDisabled: Color
+)
 
-// Cặp màu "tín hiệu" lấy cảm hứng từ sóng âm khi ghi âm cuộc họp — chỉ dùng cho điểm nhấn
-// (waveform, nút chính, liên kết), không trải đều khắp giao diện
-val SignalAmber = Color(0xFFF2A33C)
-val SignalCoral = Color(0xFFF2683C)
-val SignalViolet = Color(0xFF8C7AE6)
+internal val LocalAdditionalColors = staticCompositionLocalOf<AdditionalColors> {
+    error("Colors must be read inside MeetMindTheme")
+}
 
-val TextPrimary = Color(0xFFF4F1EC)
-val TextMuted = Color(0xFF8D8A99)
-val TextFaint = Color(0xFF615D6E)
+// Keep existing screen tokens, but resolve them from the active theme on every read.
+val InkBackground: Color @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.background
+val InkSurface: Color @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.surface
+val InkSurfaceElevated: Color @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.surfaceContainerHigh
+val InkOutline: Color @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.outline
+val SignalAmber: Color @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.primary
+val SignalCoral: Color @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.secondary
+val SignalViolet: Color @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.tertiary
+val TextPrimary: Color @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.onSurface
+val TextMuted: Color @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.onSurfaceVariant
+val TextFaint: Color @Composable @ReadOnlyComposable get() = LocalAdditionalColors.current.textFaint
+val StateSuccess: Color @Composable @ReadOnlyComposable get() = LocalAdditionalColors.current.success
+val OnSuccess: Color @Composable @ReadOnlyComposable get() = LocalAdditionalColors.current.onSuccess
+val StateError: Color @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.error
+val DisabledContainer: Color @Composable @ReadOnlyComposable get() = LocalAdditionalColors.current.disabledContainer
+val OnDisabled: Color @Composable @ReadOnlyComposable get() = LocalAdditionalColors.current.onDisabled
 
-val StateSuccess = Color(0xFF4FD1A5)
-val StateError = Color(0xFFFF6B6B)
+enum class ThemeAccent { AMBER, CORAL, VIOLET, SUCCESS }
+
+@Composable
+@ReadOnlyComposable
+fun ThemeAccent.color(): Color = when (this) {
+    ThemeAccent.AMBER -> SignalAmber
+    ThemeAccent.CORAL -> SignalCoral
+    ThemeAccent.VIOLET -> SignalViolet
+    ThemeAccent.SUCCESS -> StateSuccess
+}

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -56,6 +57,7 @@ fun MeetMindBottomBar(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .navigationBarsPadding()
                     .height(76.dp)
                     .padding(horizontal = 6.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -78,7 +80,7 @@ fun MeetMindBottomBar(
                 .clickable(onClick = onRecordClick),
             contentAlignment = Alignment.Center
         ) {
-            Icon(Icons.Filled.Mic, contentDescription = "Ghi âm", tint = androidx.compose.ui.graphics.Color.White)
+            Icon(Icons.Filled.Mic, contentDescription = "Ghi âm", tint = MaterialTheme.colorScheme.onPrimary)
         }
     }
 }

@@ -40,7 +40,6 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -52,6 +51,8 @@ import com.team7.meetmind.ui.theme.SignalCoral
 import com.team7.meetmind.ui.theme.SignalViolet
 import com.team7.meetmind.ui.theme.TextFaint
 import com.team7.meetmind.ui.theme.TextMuted
+import com.team7.meetmind.ui.theme.DisabledContainer
+import com.team7.meetmind.ui.theme.OnDisabled
 import kotlin.random.Random
 
 /**
@@ -88,12 +89,12 @@ fun VoiceWaveformHero(modifier: Modifier = Modifier, barCount: Int = 28) {
         )
     }
 
+    val gradient = Brush.horizontalGradient(colors = listOf(SignalAmber, SignalCoral, SignalViolet))
     Canvas(modifier = modifier.fillMaxWidth().height(96.dp)) {
         val barWidth = size.width / (barCount * 1.6f)
         val gap = barWidth * 0.6f
         val totalWidth = barCount * (barWidth + gap)
         val startX = (size.width - totalWidth) / 2f
-        val gradient = Brush.horizontalGradient(colors = listOf(SignalAmber, SignalCoral, SignalViolet))
         amplitudes.forEachIndexed { index, amp ->
             val h = size.height * amp.value
             val x = startX + index * (barWidth + gap)
@@ -164,7 +165,8 @@ fun GradientAuthButton(
     enabled: Boolean = true
 ) {
     val activeGradient = Brush.horizontalGradient(listOf(SignalAmber, SignalCoral))
-    val disabledGradient = Brush.horizontalGradient(listOf(TextFaint, TextFaint))
+    val disabledGradient = Brush.horizontalGradient(listOf(DisabledContainer, DisabledContainer))
+    val contentColor = if (enabled && !loading) MaterialTheme.colorScheme.onPrimary else OnDisabled
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -175,9 +177,9 @@ fun GradientAuthButton(
         contentAlignment = Alignment.Center
     ) {
         if (loading) {
-            CircularProgressIndicator(color = Color.White, strokeWidth = 2.dp, modifier = Modifier.size(22.dp))
+            CircularProgressIndicator(color = contentColor, strokeWidth = 2.dp, modifier = Modifier.size(22.dp))
         } else {
-            Text(text, color = Color(0xFF231405), fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+            Text(text, color = contentColor, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
         }
     }
 }
