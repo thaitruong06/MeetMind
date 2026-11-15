@@ -8,7 +8,6 @@ lifecycleRuntimeKtx = "2.6.1"
 activityCompose = "1.13.0"
 kotlin = "2.4.0"
 composeBom = "2026.02.01"
-googleGmsGoogleServices = "4.5.0"
 firebaseAuth = "25.0.0"
 
 [libraries]
@@ -31,5 +30,4 @@ firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
-
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
