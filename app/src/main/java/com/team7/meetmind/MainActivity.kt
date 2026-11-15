@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.team7.meetmind.navigation.MeetMindNavGraph
-import com.team7.meetmind.ui.theme.MeetMindTheme
+import com.team7.meetmind.presentation.navigation.MeetMindRoot
+import com.team7.meetmind.presentation.theme.MeetMindTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -13,7 +13,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MeetMindTheme {
-                MeetMindNavGraph()
+                MeetMindRoot()
             }
         }
     }
