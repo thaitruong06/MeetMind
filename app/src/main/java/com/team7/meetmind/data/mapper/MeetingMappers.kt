@@ -10,51 +10,49 @@ import com.team7.meetmind.domain.model.CalendarEvent
 import com.team7.meetmind.domain.model.Folder
 import com.team7.meetmind.domain.model.Meeting
 import com.team7.meetmind.domain.model.TranscriptLine
-import java.time.Instant
 import java.time.LocalDate
-import java.time.OffsetDateTime
+import java.time.format.DateTimeParseException
 
-private fun parseInstant(value: String): Instant = OffsetDateTime.parse(value).toInstant()
-
-internal fun MeetingDto.toDomain(): Meeting = Meeting(
+/** [folder] là thư mục mà cuộc họp thuộc về (nếu có); [pendingActionItems] đã được đếm sẵn ở repository. */
+internal fun MeetingDto.toDomain(folder: FolderDto?, pendingActionItems: Int): Meeting = Meeting(
     id = id,
     title = title,
     summary = summary,
-    startedAt = parseInstant(startedAt),
+    startedAt = startedAt.toInstant(),
     durationSeconds = durationSeconds,
-    folderName = folders?.name,
-    folderColorHex = folders?.color,
+    folderName = folder?.name,
+    folderColorHex = folder?.color,
     tags = tags,
     participants = participants,
-    pendingActionItems = actionItems.count { !it.done }
+    pendingActionItems = pendingActionItems,
 )
 
-internal fun FolderDto.toDomain(): Folder = Folder(
+internal fun FolderDto.toDomain(meetingCount: Int): Folder = Folder(
     id = id,
     name = name,
     colorHex = color,
-    meetingCount = meetings.firstOrNull()?.count ?: 0
+    meetingCount = meetingCount,
 )
 
 internal fun TranscriptLineDto.toDomain(): TranscriptLine = TranscriptLine(
     id = id,
     speaker = speaker,
     startSeconds = startSeconds,
-    text = text
+    text = text,
 )
 
 internal fun ActionItemDto.toDomain(): ActionItem = ActionItem(
     id = id,
     content = content,
     assignee = assignee,
-    dueDate = dueDate?.let { LocalDate.parse(it) },
-    done = done
+    dueDate = dueDate?.let { try { LocalDate.parse(it) } catch (_: DateTimeParseException) { null } },
+    done = done,
 )
 
 internal fun CalendarEventDto.toDomain(): CalendarEvent = CalendarEvent(
     id = id,
     title = title,
-    startsAt = parseInstant(startsAt),
-    endsAt = parseInstant(endsAt),
-    autoRecord = autoRecord
+    startsAt = startsAt.toInstant(),
+    endsAt = endsAt.toInstant(),
+    autoRecord = autoRecord,
 )

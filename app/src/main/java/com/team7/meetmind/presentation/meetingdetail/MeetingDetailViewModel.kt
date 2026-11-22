@@ -47,7 +47,7 @@ class MeetingDetailViewModel(
         }
     }
 
-    /** Cập nhật giao diện ngay (optimistic), rồi lưu lên Supabase; lỗi thì hoàn tác. */
+    /** Cập nhật giao diện ngay (optimistic), rồi lưu lên Firestore; lỗi thì hoàn tác. */
     fun onToggleActionItem(actionItemId: String) {
         val current = _uiState.value.detail ?: return
         val item = current.actionItems.firstOrNull { it.id == actionItemId } ?: return

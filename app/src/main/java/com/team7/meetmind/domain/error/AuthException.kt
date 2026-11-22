@@ -11,15 +11,16 @@ sealed class AuthException(message: String? = null, cause: Throwable? = null) : 
     class EmptyPassword : AuthException()
     class PasswordTooShort(val minLength: Int) : AuthException()
     class PasswordMismatch : AuthException()
-    class InvalidCodeFormat : AuthException()
 
-    // --- Lỗi do server Supabase trả về ---
+    // --- Lỗi do Firebase Authentication trả về ---
     class InvalidCredentials : AuthException()
     class EmailAlreadyRegistered : AuthException()
-    class EmailNotConfirmed : AuthException()
-    class InvalidOrExpiredCode : AuthException()
+    class AccountDisabled : AuthException()
     class WeakPassword : AuthException()
     class RateLimited : AuthException()
     class Network(cause: Throwable?) : AuthException(cause = cause)
+
+    /** Gọi dữ liệu khi chưa đăng nhập. */
+    class NotSignedIn : AuthException()
     class Unknown(val detail: String?, cause: Throwable? = null) : AuthException(detail, cause)
 }

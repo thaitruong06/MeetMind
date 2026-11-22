@@ -16,11 +16,3 @@ sealed interface SessionState {
     data class Authenticated(val user: User) : SessionState
     data object Unauthenticated : SessionState
 }
-
-enum class RegisterOutcome {
-    /** Đăng ký xong và đã đăng nhập luôn. */
-    SIGNED_IN,
-
-    /** Project Supabase đang bật "Confirm email": người dùng phải bấm link xác nhận trong email. */
-    EMAIL_CONFIRMATION_REQUIRED
-}
