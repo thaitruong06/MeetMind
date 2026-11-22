@@ -1,34 +1,37 @@
 package com.team7.meetmind.data.mapper
 
+import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.FirebaseTooManyRequestsException
+import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.team7.meetmind.domain.error.AuthException
 import java.io.IOException
 
-/**
- * Chuyển mọi ngoại lệ thô từ supabase-kt/Ktor thành AuthException của domain.
- * Nhận diện theo nội dung thông báo lỗi chuẩn của Supabase Auth (ổn định giữa các phiên bản SDK).
- */
+/** Chuyển mọi ngoại lệ thô từ Firebase Authentication thành AuthException của domain. */
 internal fun Throwable.toAuthException(): AuthException {
     if (this is AuthException) return this
 
     val chain = generateSequence(this) { it.cause }.toList()
-    val text = chain.joinToString(" | ") { it.message.orEmpty() }.lowercase()
+    val firebaseAuth = chain.filterIsInstance<FirebaseAuthException>().firstOrNull()
 
     return when {
-        "invalid login credentials" in text -> AuthException.InvalidCredentials()
-        "user already registered" in text || "already been registered" in text -> AuthException.EmailAlreadyRegistered()
-        "email not confirmed" in text -> AuthException.EmailNotConfirmed()
-        "token has expired or is invalid" in text || "otp_expired" in text -> AuthException.InvalidOrExpiredCode()
-        "password should be at least" in text || "weak_password" in text || "weak password" in text ->
-            AuthException.WeakPassword()
-        "rate limit" in text || "too many requests" in text || "for security purposes" in text ->
-            AuthException.RateLimited()
-        chain.any { it is IOException } -> AuthException.Network(this)
-        else -> AuthException.Unknown(message, this)
+        // FirebaseAuthWeakPasswordException là con của FirebaseAuthInvalidCredentialsException => kiểm tra trước.
+        chain.any { it is FirebaseAuthWeakPasswordException } -> AuthException.WeakPassword()
+        chain.any { it is FirebaseAuthUserCollisionException } -> AuthException.EmailAlreadyRegistered()
+        chain.any { it is FirebaseTooManyRequestsException } -> AuthException.RateLimited()
+        chain.any { (it is FirebaseNetworkException) || (it is IOException) } -> AuthException.Network(this)
+        firebaseAuth?.errorCode == "ERROR_USER_DISABLED" -> AuthException.AccountDisabled()
+        firebaseAuth?.errorCode == "ERROR_INVALID_EMAIL" -> AuthException.InvalidEmail()
+        // Sai mật khẩu, email chưa đăng ký, thông tin không hợp lệ: Firebase gộp chung để chống dò email.
+        chain.any { (it is FirebaseAuthInvalidCredentialsException) || (it is FirebaseAuthInvalidUserException) } ->
+            AuthException.InvalidCredentials()
+        else -> AuthException.Unknown(firebaseAuth?.let { "${it.errorCode}: ${it.message}" } ?: message, this)
     }
 }
 
-internal fun <T> Result<T>.mapAuthFailure(): Result<T> =
-    fold(
-        onSuccess = { Result.success(it) },
-        onFailure = { Result.failure<T>(it.toAuthException()) }
-    )
+internal fun <T> Result<T>.mapAuthFailure(): Result<T> = fold(
+    onSuccess = { Result.success(it) },
+) { Result.failure(it.toAuthException()) }

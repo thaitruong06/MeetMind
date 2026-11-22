@@ -13,8 +13,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Pin
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -38,6 +37,7 @@ import com.team7.meetmind.presentation.auth.components.GradientAuthButton
 import com.team7.meetmind.presentation.auth.components.MeetMindTextField
 import com.team7.meetmind.presentation.auth.components.clickableNoRipple
 import com.team7.meetmind.presentation.theme.SignalAmber
+import com.team7.meetmind.presentation.theme.StateSuccess
 import com.team7.meetmind.presentation.theme.TextMuted
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -48,9 +48,6 @@ fun ForgotPasswordScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var email by rememberSaveable { mutableStateOf("") }
-    var code by rememberSaveable { mutableStateOf("") }
-    var newPassword by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(uiState.errorMessage) {
@@ -80,84 +77,55 @@ fun ForgotPasswordScreen(
             )
             Spacer(Modifier.height(6.dp))
 
-            when (uiState.step) {
-                ResetStep.ENTER_EMAIL -> {
+            val sentToEmail = uiState.sentToEmail
+            if (sentToEmail == null) {
+                Text(
+                    "Nhập email đã đăng ký, MeetMind sẽ gửi liên kết để bạn đặt lại mật khẩu",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = TextMuted
+                )
+                Spacer(Modifier.height(32.dp))
+                MeetMindTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = "Email",
+                    keyboardType = KeyboardType.Email,
+                    leadingIcon = { Icon(Icons.Filled.Email, contentDescription = null, tint = TextMuted) }
+                )
+                Spacer(Modifier.height(28.dp))
+                GradientAuthButton(
+                    text = "Gửi email đặt lại mật khẩu",
+                    loading = uiState.isLoading,
+                    enabled = !uiState.isLoading,
+                    onClick = { viewModel.onSendEmail(email) }
+                )
+            } else {
+                Icon(Icons.Filled.CheckCircle, contentDescription = null, tint = StateSuccess)
+                Spacer(Modifier.height(12.dp))
+                Text(
+                    "Nếu $sentToEmail đã đăng ký, bạn sẽ nhận được email đặt lại mật khẩu trong ít phút. " +
+                        "Hãy bấm vào liên kết trong email (kiểm tra cả mục spam), đặt mật khẩu mới rồi quay lại đăng nhập.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                Spacer(Modifier.height(28.dp))
+                GradientAuthButton(text = "Về trang đăng nhập", onClick = onBackToLogin)
+                Spacer(Modifier.height(24.dp))
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     Text(
-                        "Nhập email đã đăng ký, MeetMind sẽ gửi mã xác nhận để bạn đặt lại mật khẩu",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = TextMuted
+                        "Gửi lại email",
+                        color = if (uiState.isLoading) TextMuted else SignalAmber,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.clickableNoRipple { viewModel.onResend() }
                     )
-                    Spacer(Modifier.height(32.dp))
-                    MeetMindTextField(
-                        value = email,
-                        onValueChange = { email = it },
-                        label = "Email",
-                        keyboardType = KeyboardType.Email,
-                        leadingIcon = { Icon(Icons.Filled.Email, contentDescription = null, tint = TextMuted) }
-                    )
-                    Spacer(Modifier.height(28.dp))
-                    GradientAuthButton(
-                        text = "Gửi mã xác nhận",
-                        loading = uiState.isLoading,
-                        enabled = !uiState.isLoading,
-                        onClick = { viewModel.onSendCode(email) }
-                    )
-                }
-
-                ResetStep.ENTER_CODE -> {
                     Text(
-                        uiState.infoMessage ?: "Nhập mã xác nhận đã gửi tới email của bạn.",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = TextMuted
+                        "Đổi email",
+                        color = SignalAmber,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.clickableNoRipple { viewModel.onChangeEmail() }
                     )
-                    Spacer(Modifier.height(32.dp))
-                    MeetMindTextField(
-                        value = code,
-                        onValueChange = { code = it.filter { ch -> ch.isDigit() }.take(10) },
-                        label = "Mã xác nhận",
-                        keyboardType = KeyboardType.NumberPassword,
-                        leadingIcon = { Icon(Icons.Filled.Pin, contentDescription = null, tint = TextMuted) }
-                    )
-                    Spacer(Modifier.height(16.dp))
-                    MeetMindTextField(
-                        value = newPassword,
-                        onValueChange = { newPassword = it },
-                        label = "Mật khẩu mới (tối thiểu 6 ký tự)",
-                        isPassword = true,
-                        leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = null, tint = TextMuted) }
-                    )
-                    Spacer(Modifier.height(16.dp))
-                    MeetMindTextField(
-                        value = confirmPassword,
-                        onValueChange = { confirmPassword = it },
-                        label = "Nhập lại mật khẩu mới",
-                        isPassword = true,
-                        leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = null, tint = TextMuted) }
-                    )
-                    Spacer(Modifier.height(28.dp))
-                    GradientAuthButton(
-                        text = "Đặt lại mật khẩu",
-                        loading = uiState.isLoading,
-                        enabled = !uiState.isLoading,
-                        onClick = { viewModel.onSubmitNewPassword(code, newPassword, confirmPassword) }
-                    )
-                    Spacer(Modifier.height(24.dp))
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text(
-                            "Gửi lại mã",
-                            color = SignalAmber,
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            modifier = Modifier.clickableNoRipple { viewModel.onResendCode() }
-                        )
-                        Text(
-                            "Đổi email",
-                            color = SignalAmber,
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            modifier = Modifier.clickableNoRipple { viewModel.onChangeEmail() }
-                        )
-                    }
                 }
             }
             Spacer(Modifier.height(40.dp))

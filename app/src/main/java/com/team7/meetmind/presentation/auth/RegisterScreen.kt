@@ -12,7 +12,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
@@ -39,7 +38,6 @@ import com.team7.meetmind.presentation.auth.components.GradientAuthButton
 import com.team7.meetmind.presentation.auth.components.MeetMindTextField
 import com.team7.meetmind.presentation.auth.components.clickableNoRipple
 import com.team7.meetmind.presentation.theme.SignalAmber
-import com.team7.meetmind.presentation.theme.StateSuccess
 import com.team7.meetmind.presentation.theme.TextMuted
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -88,66 +86,53 @@ fun RegisterScreen(
             )
             Spacer(Modifier.height(32.dp))
 
-            val confirmationEmail = uiState.confirmationEmail
-            if (confirmationEmail != null) {
-                Icon(Icons.Filled.CheckCircle, contentDescription = null, tint = StateSuccess)
-                Spacer(Modifier.height(12.dp))
+            MeetMindTextField(
+                value = name,
+                onValueChange = { name = it },
+                label = "Họ và tên",
+                leadingIcon = { Icon(Icons.Filled.Person, contentDescription = null, tint = TextMuted) }
+            )
+            Spacer(Modifier.height(16.dp))
+            MeetMindTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = "Email",
+                keyboardType = KeyboardType.Email,
+                leadingIcon = { Icon(Icons.Filled.Email, contentDescription = null, tint = TextMuted) }
+            )
+            Spacer(Modifier.height(16.dp))
+            MeetMindTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = "Mật khẩu (tối thiểu 6 ký tự)",
+                isPassword = true,
+                leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = null, tint = TextMuted) }
+            )
+            Spacer(Modifier.height(16.dp))
+            MeetMindTextField(
+                value = confirmPassword,
+                onValueChange = { confirmPassword = it },
+                label = "Nhập lại mật khẩu",
+                isPassword = true,
+                leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = null, tint = TextMuted) }
+            )
+            Spacer(Modifier.height(28.dp))
+            GradientAuthButton(
+                text = "Đăng ký",
+                loading = uiState.isLoading,
+                enabled = !uiState.isLoading,
+                onClick = { viewModel.onRegisterClick(name, email, password, confirmPassword) }
+            )
+            Spacer(Modifier.height(28.dp))
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                Text("Đã có tài khoản? ", color = TextMuted, style = MaterialTheme.typography.bodyMedium)
                 Text(
-                    "Đã gửi email xác nhận tới $confirmationEmail. Hãy bấm vào liên kết trong email rồi quay lại đăng nhập.",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onBackground
+                    "Đăng nhập",
+                    color = SignalAmber,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.clickableNoRipple { onNavigateToLogin() }
                 )
-                Spacer(Modifier.height(28.dp))
-                GradientAuthButton(text = "Về trang đăng nhập", onClick = onNavigateToLogin)
-            } else {
-                MeetMindTextField(
-                    value = name,
-                    onValueChange = { name = it },
-                    label = "Họ và tên",
-                    leadingIcon = { Icon(Icons.Filled.Person, contentDescription = null, tint = TextMuted) }
-                )
-                Spacer(Modifier.height(16.dp))
-                MeetMindTextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    label = "Email",
-                    keyboardType = KeyboardType.Email,
-                    leadingIcon = { Icon(Icons.Filled.Email, contentDescription = null, tint = TextMuted) }
-                )
-                Spacer(Modifier.height(16.dp))
-                MeetMindTextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    label = "Mật khẩu (tối thiểu 6 ký tự)",
-                    isPassword = true,
-                    leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = null, tint = TextMuted) }
-                )
-                Spacer(Modifier.height(16.dp))
-                MeetMindTextField(
-                    value = confirmPassword,
-                    onValueChange = { confirmPassword = it },
-                    label = "Nhập lại mật khẩu",
-                    isPassword = true,
-                    leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = null, tint = TextMuted) }
-                )
-                Spacer(Modifier.height(28.dp))
-                GradientAuthButton(
-                    text = "Đăng ký",
-                    loading = uiState.isLoading,
-                    enabled = !uiState.isLoading,
-                    onClick = { viewModel.onRegisterClick(name, email, password, confirmPassword) }
-                )
-                Spacer(Modifier.height(28.dp))
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                    Text("Đã có tài khoản? ", color = TextMuted, style = MaterialTheme.typography.bodyMedium)
-                    Text(
-                        "Đăng nhập",
-                        color = SignalAmber,
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.clickableNoRipple { onNavigateToLogin() }
-                    )
-                }
             }
             Spacer(Modifier.height(40.dp))
         }

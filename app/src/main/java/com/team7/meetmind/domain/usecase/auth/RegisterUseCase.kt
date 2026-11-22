@@ -1,7 +1,6 @@
 package com.team7.meetmind.domain.usecase.auth
 
 import com.team7.meetmind.domain.error.AuthException
-import com.team7.meetmind.domain.model.RegisterOutcome
 import com.team7.meetmind.domain.repository.AuthRepository
 
 class RegisterUseCase(private val authRepository: AuthRepository) {
@@ -10,7 +9,7 @@ class RegisterUseCase(private val authRepository: AuthRepository) {
         email: String,
         password: String,
         confirmPassword: String
-    ): Result<RegisterOutcome> {
+    ): Result<Unit> {
         val error: AuthException? = when {
             name.isBlank() -> AuthException.EmptyName()
             !AuthValidation.isValidEmail(email) -> AuthException.InvalidEmail()

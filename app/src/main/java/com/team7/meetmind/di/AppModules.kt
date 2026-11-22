@@ -1,6 +1,7 @@
 package com.team7.meetmind.di
 
-import com.team7.meetmind.data.remote.SupabaseClientFactory
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.team7.meetmind.data.repository.AuthRepositoryImpl
 import com.team7.meetmind.data.repository.MeetingRepositoryImpl
 import com.team7.meetmind.domain.repository.AuthRepository
@@ -9,8 +10,7 @@ import com.team7.meetmind.domain.usecase.auth.LoginUseCase
 import com.team7.meetmind.domain.usecase.auth.LogoutUseCase
 import com.team7.meetmind.domain.usecase.auth.ObserveSessionUseCase
 import com.team7.meetmind.domain.usecase.auth.RegisterUseCase
-import com.team7.meetmind.domain.usecase.auth.ResetPasswordWithCodeUseCase
-import com.team7.meetmind.domain.usecase.auth.SendPasswordResetCodeUseCase
+import com.team7.meetmind.domain.usecase.auth.SendPasswordResetEmailUseCase
 import com.team7.meetmind.domain.usecase.meeting.GetFoldersUseCase
 import com.team7.meetmind.domain.usecase.meeting.GetMeetingDetailUseCase
 import com.team7.meetmind.domain.usecase.meeting.GetMeetingsUseCase
@@ -28,16 +28,16 @@ import com.team7.meetmind.presentation.recording.RecordingViewModel
 import com.team7.meetmind.presentation.search.SearchViewModel
 import com.team7.meetmind.presentation.session.SessionViewModel
 import com.team7.meetmind.presentation.settings.SettingsViewModel
-import io.github.jan.supabase.SupabaseClient
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
-/** Tầng data: client Supabase và các repository (singleton, dùng chung cả app). */
+/** Tầng data: Firebase (Auth + Firestore) và các repository (singleton, dùng chung cả app). */
 val dataModule = module {
-    single<SupabaseClient> { SupabaseClientFactory.create() }
-    single<AuthRepository> { AuthRepositoryImpl(get()) }
-    single<MeetingRepository> { MeetingRepositoryImpl(get()) }
+    single { FirebaseAuth.getInstance() }
+    single { FirebaseFirestore.getInstance() }
+    single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
+    single<MeetingRepository> { MeetingRepositoryImpl(get(), get()) }
 }
 
 /** Tầng domain: mỗi use case một lớp nhỏ, tạo mới khi cần (factory). */
@@ -46,8 +46,7 @@ val domainModule = module {
     factoryOf(::RegisterUseCase)
     factoryOf(::LogoutUseCase)
     factoryOf(::ObserveSessionUseCase)
-    factoryOf(::SendPasswordResetCodeUseCase)
-    factoryOf(::ResetPasswordWithCodeUseCase)
+    factoryOf(::SendPasswordResetEmailUseCase)
 
     factoryOf(::GetMeetingsUseCase)
     factoryOf(::GetMeetingDetailUseCase)
