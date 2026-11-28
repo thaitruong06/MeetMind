@@ -23,11 +23,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.clickable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -40,6 +42,7 @@ import com.team7.meetmind.presentation.theme.SignalAmber
 import com.team7.meetmind.presentation.theme.TextFaint
 import com.team7.meetmind.presentation.theme.TextMuted
 import com.team7.meetmind.presentation.theme.TextPrimary
+import com.team7.meetmind.presentation.theme.ThemeMode
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -67,6 +70,28 @@ fun SettingsScreen(
             SettingsRow(icon = Icons.Filled.Person, title = uiState.userLabel, subtitle = "Quản lý tài khoản")
             Spacer(Modifier.height(20.dp))
             SettingsSectionLabel("Ứng dụng")
+            SettingsSectionLabel("Giao diện")
+            Row(
+                modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(50)).background(MaterialTheme.colorScheme.surfaceVariant).padding(4.dp),
+                horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(4.dp)
+            ) {
+                listOf(ThemeMode.SYSTEM to "Hệ thống", ThemeMode.LIGHT to "Sáng", ThemeMode.DARK to "Tối").forEach { (mode, label) ->
+                    val selected = uiState.themeMode == mode
+                    Surface(
+                        modifier = Modifier.weight(1f).clip(RoundedCornerShape(50)).clickable { viewModel.onThemeModeChange(mode) },
+                        shape = RoundedCornerShape(50),
+                        color = if (selected) MaterialTheme.colorScheme.primary else androidx.compose.ui.graphics.Color.Transparent
+                    ) {
+                        Text(
+                            text = label,
+                            color = if (selected) MaterialTheme.colorScheme.onPrimary else TextMuted,
+                            style = MaterialTheme.typography.labelLarge,
+                            modifier = Modifier.padding(vertical = 10.dp),
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        )
+                    }
+                }
+            }
             SettingsToggleRow(
                 icon = Icons.Filled.CloudSync,
                 title = "Đồng bộ Cloud",

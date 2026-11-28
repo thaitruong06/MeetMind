@@ -28,12 +28,15 @@ import com.team7.meetmind.presentation.recording.RecordingViewModel
 import com.team7.meetmind.presentation.search.SearchViewModel
 import com.team7.meetmind.presentation.session.SessionViewModel
 import com.team7.meetmind.presentation.settings.SettingsViewModel
+import com.team7.meetmind.presentation.theme.ThemePreferences
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 /** Tầng data: Firebase (Auth + Firestore) và các repository (singleton, dùng chung cả app). */
 val dataModule = module {
+    single { ThemePreferences(androidContext()) }
     single { FirebaseAuth.getInstance() }
     single { FirebaseFirestore.getInstance() }
     single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
